@@ -1,0 +1,14 @@
+# base class that should be imported on all cluster classes
+#
+
+parameters:
+
+  kapitan:
+    vars:
+      target: ${name}
+    compile:
+      - output_path: dashboards
+        output_type: json
+        input_paths:
+          - components/cluster_dashboard/main.jsonnet
+        input_type: jsonnet

@@ -1,0 +1,27 @@
+########################################
+# Classes to include in this target
+########################################
+classes:
+  - common
+
+########################################
+# override variables defined in any of
+# the classes above
+########################################
+parameters:
+  name: project
+  env: prod
+  cluster_name: "prod-cluster"
+
+  resources:
+    envs:
+
+      demo:
+        - name: demo-cluster
+
+      prod:        
+        - name: prod-cluster
+
+      test:        
+        - name: test-cluster
+
