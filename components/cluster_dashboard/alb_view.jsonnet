@@ -10,20 +10,21 @@ local grafana_ext = import "lib/sa_grafanonnet/main.libsonnet";
 local singlestat = grafana.singlestat;
 local text = grafana.text;
 
+local alb_requests_panel = grafana_ext.panels.alb.requestcount_latency;
+local alb_httpcode_panel = grafana_ext.panels.alb.http_code;
+local alb_connectioncount_panel = grafana_ext.panels.alb.connectioncount;
+
 
 dashboard.new(
-    "Cluster view",
-    editable = true,    
+    "Application load balancers view",
+    editable = true,
     tags=[inv.parameters.env],
 )
 .addTemplate(
     grafana_ext.variables.regions.new()
 )
 .addTemplate(
-    grafana_ext.variables.clusters.new()
-)
-.addTemplate(
-    grafana_ext.variables.cluster_services.new()
+    grafana_ext.variables.app_loadbalancers.new()
 )
 .addRow(
     row.new()
@@ -36,25 +37,21 @@ dashboard.new(
 .addRow(
     row.new()
     .addPanel(
-        grafana_ext.panels.ecs.cpuutilization.new()
-    )    
+        alb_requests_panel.new(
+        )
+    )
 )
 .addRow(
     row.new()
     .addPanel(
-        grafana_ext.panels.ecs.memoryutilization.new()
-    )    
+        alb_httpcode_panel.new(
+        )
+    )
 )
 .addRow(
     row.new()
     .addPanel(
-        grafana_ext.panels.ecs.cpureservation.new()
-    )    
+        alb_connectioncount_panel.new(
+        )
+    )
 )
-.addRow(
-    row.new()
-    .addPanel(
-        grafana_ext.panels.ecs.memoryreservation.new()
-    )    
-)
-

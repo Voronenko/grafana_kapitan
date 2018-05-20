@@ -15,7 +15,7 @@ local metricTarget = grafana_ext.targets.metric;
             title = "ConnectionCount",
             span = 12,
             fill = 1,
-            linewidth=1,
+            linewidth=2,
             decimals=null,
             description=null,
             min_span=null,
@@ -23,13 +23,13 @@ local metricTarget = grafana_ext.targets.metric;
             min=0,
             max=null,
             lines=true,
-            datasource=null,
+            datasource=datasource,
             points=false,
             bars=false,
             height=null,
-            nullPointMode='null',
+            nullPointMode='null as zero',
             dashes=false,
-            stack=false,
+            stack=true,
             repeat=null,
             repeatDirection=null,
             sort=0,
@@ -48,28 +48,7 @@ local metricTarget = grafana_ext.targets.metric;
             legend_sort=null,
             legend_sortDesc=null,
             aliasColors={},
-            value_type='cumulative'
-        )
-        .addTarget(
-            metricTarget.new(
-                namespace = albMetrics.Namespace,
-                metric = albMetrics.Metric_TargetConnectionErrorCount,
-                refId = "A"
-            )
-        )
-        .addTarget(
-            metricTarget.new(
-                namespace = albMetrics.Namespace,
-                metric = albMetrics.Metric_RejectedConnectionCount,
-                refId = "B"
-            )
-        )
-        .addTarget(
-            metricTarget.new(
-                namespace = albMetrics.Namespace,
-                metric = albMetrics.Metric_NewConnectionCount,
-                refId = "C"
-            )
+            value_type='individual'
         )
         .addTarget(
             metricTarget.new(
@@ -77,7 +56,33 @@ local metricTarget = grafana_ext.targets.metric;
                 metric = albMetrics.Metric_ActiveConnectionCount,
                 refId = "D"
             )
+            .addDimension(albMetrics.Dimension_LoadBalancer.name, albMetrics.Dimension_LoadBalancer.variable)
+        )        
+        .addTarget(
+            metricTarget.new(
+                namespace = albMetrics.Namespace,
+                metric = albMetrics.Metric_NewConnectionCount,
+                refId = "C"
+            )
+            .addDimension(albMetrics.Dimension_LoadBalancer.name, albMetrics.Dimension_LoadBalancer.variable)            
+        )       
+        .addTarget(
+            metricTarget.new(
+                namespace = albMetrics.Namespace,
+                metric = albMetrics.Metric_RejectedConnectionCount,
+                refId = "B"
+            )
+            .addDimension(albMetrics.Dimension_LoadBalancer.name, albMetrics.Dimension_LoadBalancer.variable)            
+        )       
+        .addTarget(
+            metricTarget.new(
+                namespace = albMetrics.Namespace,
+                metric = albMetrics.Metric_TargetConnectionErrorCount,
+                refId = "A"
+            )
+            .addDimension(albMetrics.Dimension_LoadBalancer.name, albMetrics.Dimension_LoadBalancer.variable)            
         )
+
         .addSeriesOverride(
             {
             "alias": "HTTPCode_ELB_4XX_Sum",
@@ -90,5 +95,9 @@ local metricTarget = grafana_ext.targets.metric;
             "yaxis": 2
             }            
         )
+        .resetYaxes()
+        .addYaxis(format="none", min=0)
+        .addYaxis(format="short", min=0, show=false)
+        
         
 }

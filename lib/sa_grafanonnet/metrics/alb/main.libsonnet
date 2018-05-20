@@ -34,7 +34,7 @@
     },
 
     Metric_HTTPCode_ELB_5XX_Count: {
-        name: "HTTPCode_ELB_4XX_Count"
+        name: "HTTPCode_ELB_5XX_Count"
     },
 
 
@@ -54,9 +54,24 @@
         name: "TargetConnectionErrorCount"
     },
 
+// Filter the metric data by Availability Zone.
+    Dimension_AvailabilityZone: {
+        name: "AvailabilityZone",
+        variable: "$az"                
+    },
 
-    
+// Filter the metric data by load balancer. Specify the load balancer as follows: app/load-balancer-name/1234567890123456 (the final portion of the load balancer ARN).
+    Dimension_LoadBalancer: {
+        name: "LoadBalancer",
+        variable: "$loadbalancername"
+    },
 
+//Filter the metric data by target group. Specify the target group as follows: targetgroup/target-group-name/1234567890123456 (the final portion of the target group ARN).
+    Dimension_TargetGroup: {
+        name: "TargetGroup",
+        variable: "$targetgroup"        
+    },
 
-
+    Dimensions: [self.Dimension_AvailabilityZone,self.Dimension_LoadBalancer, self.Dimension_TargetGroup],
 }
+

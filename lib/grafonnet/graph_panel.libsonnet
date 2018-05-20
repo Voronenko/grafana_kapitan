@@ -159,11 +159,29 @@
             targets+: [target { refId: std.char(std.codepoint('A') + nextTarget) }],
         },
         addTargets(targets):: std.foldl(function(p, t) p.addTarget(t), targets, self),
-        _nextSeriesOverride:: 0,        
+        _nextSeriesOverride:: 0,
         addSeriesOverride(override):: self {
             local nextOverride = super._nextSerieOverride,
             _nextSeriesOverride: nextOverride + 1,
             seriesOverrides+: [override],
+        },
+        resetYaxes():: self {
+            yaxes: [],
+            _nextYaxis:: 0,
+        },
+        _nextYaxis:: 0,
+        addYaxis(
+            format='short',
+            min=null,
+            max=null,
+            label=null,
+            show=true,
+            logBase=1,
+            decimals=null,
+        ):: self {
+            local nextYaxis = super._nextYaxis,
+            _nextYaxis: nextYaxis + 1,
+            yaxes+: [self.yaxe(format, min, max, label, show, logBase, decimals)],
         },
     },
 }

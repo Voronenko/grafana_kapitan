@@ -11,7 +11,6 @@
         filter: ""
       },
       dimensions: {
-        LoadBalancer: "$loadbalancername"
       },
       functions: [],
       group: {
@@ -35,6 +34,14 @@
       statistics: [
         statistics
       ],
-      highResolution: false
+      highResolution: false,
+
+      resetDimensions():: self {
+        dimensions: {},
+      },
+
+      addDimension(dimension, value)::self {
+        dimensions+: {[dimension]: value}
+      },
     }
 }
